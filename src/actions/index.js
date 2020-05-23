@@ -1,4 +1,29 @@
 import * as c from './ActionTypes';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { createFirestoreInstance }from 'redux-firestore';
+import firebase from "./firebase";
+import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
+
+const store = createStore(rootReducer);
+
+const rrfProps = {
+  firebase,
+  config: {
+    userProfile: "users"
+  },
+  dispatch: store.dispatch,
+  createFirestoreInstance
+}
+
+ReactDOM.render(
+  <Provider store={store}>
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <App />
+    </ReactReduxFirebaseProvider>
+  </Provider>,
+  document.getElementById('root')
+)
 
 export const deleteTicket = id => ({
   type: c.DELETE_TICKET,
@@ -9,18 +34,6 @@ export const toggleForm = () => ({
   type: c.TOGGLE_FORM
 });
 
-export const addTicket = (ticket) => {
-  const { names, location, issue, id, formattedWaitTime, timeOpen } = ticket;
-  return {
-    type: c.ADD_TICKET,
-    names: names,
-    location: location,
-    issue: issue,
-    id: id,
-    formattedWaitTime,
-    timeOpen: timeOpen
-  }
-}
 
 export const updateTime = (id, formattedWaitTime) => ({
   type: c.UPDATE_TIME,
